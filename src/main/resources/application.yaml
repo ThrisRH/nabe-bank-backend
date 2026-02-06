@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: nabe-bank
+  datasource:
+    url: jdbc:postgresql://localhost:5432/nabe_bank
+    username: thris
+    password: Chubaduy@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
