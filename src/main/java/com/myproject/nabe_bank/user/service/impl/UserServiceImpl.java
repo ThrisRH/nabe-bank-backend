@@ -1,7 +1,6 @@
 package com.myproject.nabe_bank.user.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,14 +11,18 @@ import com.myproject.nabe_bank.user.dto.request.CreateUserRequest;
 import com.myproject.nabe_bank.user.dto.request.PatchUserRequest;
 import com.myproject.nabe_bank.user.dto.request.UpdateUserRequest;
 import com.myproject.nabe_bank.user.dto.response.UserResponse;
+import com.myproject.nabe_bank.user.mapper.UserMapper;
 import com.myproject.nabe_bank.user.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
         user = userRepository.save(user);
 
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return userMapper.toRespponse(user);
     }
 
     @Override
@@ -41,7 +44,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("No users found!");
         }
         return users.stream()
-                .map(user -> new UserResponse(user.getId(), user.getName(), user.getEmail()))
+                .map(user -> userMapper.toRespponse(user))
                 .collect(Collectors.toList());
     }
 
@@ -49,14 +52,14 @@ public class UserServiceImpl implements UserService {
     public UserResponse getByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return userMapper.toRespponse(user);
     }
 
     @Override
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        return new UserResponse(user.getId(), user.getName(), user.getEmail());
+        return userMapper.toRespponse(user);
     }
 
     @Override
@@ -77,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
         user = userRepository.save(user);
 
-        return new UserResponse(id, user.getName(), user.getEmail());
+        return userMapper.toRespponse(user);
     }
 
     @Override
@@ -93,7 +96,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
         }
 
-        return new UserResponse(id, user.getName(), user.getEmail());
+        return userMapper.toRespponse(user);
     }
 
 }
