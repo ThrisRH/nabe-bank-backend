@@ -1,15 +1,10 @@
 spring:
+  profiles:
+    active: staging
   application:
     name: nabe-bank
-  datasource:
-    url: jdbc:postgresql://localhost:5432/nabe_bank
-    username: tri
-    password: Chubaduy@123
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-google:
-  client-id: 66145655427-t5j9f4cfph655rh59s0osj0f0glfcn2o.apps.googleusercontent.com
+server:
+  port: ${PORT:8080}
+
+
