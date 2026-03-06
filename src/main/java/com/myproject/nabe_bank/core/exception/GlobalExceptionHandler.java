@@ -1,5 +1,6 @@
 package com.myproject.nabe_bank.core.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,8 +26,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleServerError(Exception exception) {
-        ApiResponse<?> reponse = new ApiResponse<>(500, "ERROR", "Internal Server Error", null);
+        ApiResponse<?> reponse = new ApiResponse<>(500, "ERROR", exception.getMessage(), null);
 
         return ResponseEntity.status(500).body(reponse);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<?>> handleDuplicate(DataIntegrityViolationException ex) {
+
+        ApiResponse<?> response = new ApiResponse<>(
+                409,
+                "ERROR",
+                "Duplicate data. Resource already exists",
+                null);
+
+        return ResponseEntity.status(409).body(response);
     }
 }
