@@ -19,4 +19,12 @@ public class JwtProvider {
                 .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
+
+    public String getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
 }

@@ -10,6 +10,7 @@ import com.myproject.nabe_bank.core.security.oauth.GoogleTokenVerifier;
 import com.myproject.nabe_bank.modules.user.User;
 import com.myproject.nabe_bank.modules.user.UserRepository;
 import com.myproject.nabe_bank.modules.user.UserRole;
+import com.myproject.nabe_bank.modules.user.dto.response.UserResponse;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,13 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtProvider.generateAccessToken(user);
 
         return new AuthResponse(accessToken, user.getId(), user.getEmail(), user.getRole(), user.getCreatedDate());
+    }
+
+    @Override
+    public UserResponse getMe(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new UserResponse(userId, user.getName(), user.getEmail(), user.getAvatar(), user.getEnabled(),
+                user.getLocked(), user.getRole(), user.getCreatedDate(), user.getUpdatedDate());
     }
 }
