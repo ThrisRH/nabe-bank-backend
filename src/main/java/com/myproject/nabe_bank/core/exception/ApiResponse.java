@@ -1,47 +1,28 @@
 package com.myproject.nabe_bank.core.exception;
 
+import com.myproject.nabe_bank.core.response.ResponseCode;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class ApiResponse<T> {
     private int code;
-    private String status;
     private String message;
     private T data;
 
-    public ApiResponse(int code, String status, String message, T data) {
-        this.code = code;
-        this.status = status;
-        this.message = message;
+    public ApiResponse(ResponseCode responseCode, T data) {
+        this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
         this.data = data;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
+    public ApiResponse(int code, String message, T data) {
         this.code = code;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
         this.data = data;
     }
 }

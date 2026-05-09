@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.nabe_bank.core.exception.ApiResponse;
+import com.myproject.nabe_bank.core.response.ResponseCode;
 import com.myproject.nabe_bank.modules.rbac.dto.request.permission.CreatePermissionRequest;
 import com.myproject.nabe_bank.modules.rbac.dto.request.permission.PatchPermissionRequest;
 import com.myproject.nabe_bank.modules.rbac.dto.request.permission.UpdatePermissionRequest;
@@ -32,34 +33,34 @@ public class PermissionController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<PermissionResponse>>> getPermissions() {
         List<PermissionResponse> response = rbacService.getPermissions();
-        return ResponseEntity.ok(new ApiResponse<>(200, "SUCCESS", "Permissions fetched successfully", response));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, response));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<PermissionResponse>> createPermission(
             @RequestBody CreatePermissionRequest request) {
         PermissionResponse response = rbacService.createPermission(request);
-        return ResponseEntity.ok(new ApiResponse<>(200, "SUCCESS", "Permission created successfully", response));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.CREATED, response));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<PermissionResponse>> updatePermission(
             @PathVariable("id") Long id, @RequestBody UpdatePermissionRequest request) {
         PermissionResponse response = rbacService.updatePermission(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(200, "SUCCESS", "Permission updated successfully", response));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, response));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<PermissionResponse>> patchPermission(
             @PathVariable("id") Long id, @RequestBody PatchPermissionRequest request) {
         PermissionResponse response = rbacService.patchPermission(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(200, "SUCCESS", "Permission patched successfully", response));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, response));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deletePermission(
             @PathVariable("id") Long id) {
         rbacService.deletePermission(id);
-        return ResponseEntity.ok(new ApiResponse<>(200, "SUCCESS", "Permission deleted successfully", null));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, null));
     }
 }

@@ -1,45 +1,20 @@
 package com.myproject.nabe_bank.core.exception;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.myproject.nabe_bank.core.response.ResponseCode;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<?>> handleValidationException(MethodArgumentNotValidException exception) {
-        String message = exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-        ApiResponse<?> response = new ApiResponse<>(400, "ERROR", message, null);
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ApiResponse<?>> handleAppException(AppException exception) {
+        ResponseCode responseCode = exception.getResponseCode();
+
+        ApiResponse<?> response = new ApiResponse<>(responseCode.getCode(), responseCode.getMessage(), null);
 
         return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<?>> handleBadRequest(IllegalArgumentException exception) {
-        ApiResponse<?> response = new ApiResponse<>(404, "ERROR", exception.getMessage(), null);
-
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleServerError(Exception exception) {
-        ApiResponse<?> reponse = new ApiResponse<>(500, "ERROR", exception.getMessage(), null);
-
-        return ResponseEntity.status(500).body(reponse);
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<?>> handleDuplicate(DataIntegrityViolationException ex) {
-
-        ApiResponse<?> response = new ApiResponse<>(
-                409,
-                "ERROR",
-                "Duplicate data. Resource already exists",
-                null);
-
-        return ResponseEntity.status(409).body(response);
     }
 }
